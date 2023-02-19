@@ -1,4 +1,4 @@
 # C4F
-Client For Fapello
 
+- Download all the medias from any model
 - Tutorial: https://youtu.be/fHbg-aIch4I

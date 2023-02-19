@@ -9,9 +9,11 @@
         FontFamily="{StaticResource Dosis}"
         WindowStartupLocation="CenterScreen"
         Background="{StaticResource Background}"
-        Foreground="{StaticResource Green}"
+        Foreground="{StaticResource Normal}"
         Height="650"
         Width="500"
+        MinHeight="650"
+        MinWidth="500"
         Title="{Binding Settings.Version}">
 
     <Window.DataContext>
@@ -31,12 +33,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="50"/>
                 <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="50"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
                 <Image Source="/Assets/logo.png" Margin="5"/>
             </Grid>
-            
+
+
             <Grid Grid.Column="2">
                 <Button Style="{StaticResource RoundButton}" Command="{Binding DiscordCommand}">
                     <Path Data="{StaticResource Discord}" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource Normal}" Stretch="Uniform"/>
@@ -48,32 +52,39 @@
                     <Path Data="{StaticResource Github}" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource Normal}" Stretch="Uniform"/>
                 </Button>
             </Grid>
+
+            <Grid Grid.Column="4">
+                <Button Style="{StaticResource RoundButton}" Command="{Binding CodeCommand}">
+                    <Path Data="{StaticResource Code}" VerticalAlignment="Center" HorizontalAlignment="Center" Fill="{StaticResource Normal}" Stretch="Uniform"/>
+                </Button>
+            </Grid>
         </Grid>
 
         <Grid Grid.Row="1" Background="{StaticResource Panel}">
             <Border Margin="20" Background="{StaticResource Background}" BorderBrush="{StaticResource Background}" BorderThickness="3" CornerRadius="10">
                 <Grid Background="{StaticResource Background}" Margin="2">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="75"/>
                         <RowDefinition Height="1"/>
                         <RowDefinition Height="*"/>
-                        <RowDefinition Height="50"/>
                         <RowDefinition Height="1"/>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="100"/>
+                        <RowDefinition Height="1"/>
+                        <RowDefinition Height="75"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50"/>
-                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition Width="75"/>
+                            <ColumnDefinition Width="120"/>
                             <ColumnDefinition Width="100"/>
                             <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="50"/>
+                            <ColumnDefinition Width="75"/>
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
-                            <Button Style="{StaticResource RoundButton}" Height="50" Width="50" BorderBrush="{StaticResource Normal}" BorderThickness="1">
-                                <Ellipse Height="40" Width="40" StrokeThickness="1" Stroke="{StaticResource Normal}">
+                            <Button Style="{StaticResource RoundButton}" Height="65" Width="65" BorderBrush="{StaticResource Normal}" BorderThickness="1">
+                                <Ellipse Height="60" Width="60" StrokeThickness="1" Stroke="{StaticResource Normal}">
                                     <Ellipse.Fill>
                                         <ImageBrush ImageSource="{Binding Downloader.Profile}" Stretch="UniformToFill"/>
                                     </Ellipse.Fill>
@@ -114,22 +125,37 @@
                         </Grid>
                     </Grid>
 
-                    <Grid Grid.Row="3">
-                        <Button Style="{StaticResource FullButtonGreen}" IsEnabled="{Binding Downloader.DownloadButton}" Background="{StaticResource Green}" Foreground="{StaticResource Background}" Command="{Binding DownloadCommand}" CommandParameter="{Binding Text, ElementName=Search}" Content="Download" Margin="10,0,10,0"/>
+                    <Grid Grid.Row="3" Background="{StaticResource Panel}">
+
                     </Grid>
 
-                    <Grid Grid.Row="4" Background="{StaticResource Panel}">
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Grid Grid.Column="0">
+                            <Button Style="{StaticResource FullButtonBlue}" IsEnabled="{Binding Downloader.SearchButton}" Command="{Binding SearchCommand}" CommandParameter="{Binding Text, ElementName=Search}" Content="Search" Margin="10,0,10,0"/>
+                        </Grid>
+
+                        <Grid Grid.Column="1">
+                            <Button Style="{StaticResource FullButtonPink}" IsEnabled="{Binding Downloader.DownloadButton}" Command="{Binding DownloadCommand}" CommandParameter="{Binding Text, ElementName=Search}" Content="Download" Margin="10,0,10,0"/>
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Row="5" Background="{StaticResource Panel}">
                         
                     </Grid>
 
-                    <Grid Grid.Row="5">
+                    <Grid Grid.Row="6">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="50"/>
                         </Grid.ColumnDefinitions>
 
                         <Grid Grid.Column="0">
-                            <ProgressBar Margin="10" Height="20" Background="Transparent" BorderBrush="{StaticResource Panel}" Foreground="{StaticResource Pink}" Value="{Binding Downloader.Progress}"/>
+                            <ProgressBar Style="{StaticResource ModernProgressBar}" Margin="10" Height="25" Value="{Binding Downloader.Progress}" VerticalAlignment="Center"/>
                         </Grid>
                         <Grid Grid.Column="1">
                             <Label Content="{Binding Downloader.Progress}" ContentStringFormat="{}{0}%" Foreground="{StaticResource Pink}" FontSize="15" VerticalAlignment="Center" HorizontalAlignment="Center"/>

@@ -10,6 +10,8 @@ using System.Net.Http;
 using System.Windows.Shapes;
 using System.Xml.Linq;
 using System.Windows.Media.Animation;
+using System.Security.Policy;
+using System.Windows.Markup;
 
 namespace C4F.ViewModels
 {
@@ -42,7 +44,7 @@ namespace C4F.ViewModels
             set { SetProperty(ref _totalmedias, value); }
         }
 
-        private string _name = "author: neo";
+        private string _name = "Author: neo";
         public string Name
         {
             get { return _name; }
@@ -54,6 +56,13 @@ namespace C4F.ViewModels
         {
             set { SetProperty(ref _downloadbutton, value); }
             get { return _downloadbutton; }
+        }
+
+        private bool _searchbutton = true;
+        public bool SearchButton
+        {
+            set { SetProperty(ref _searchbutton, value); }
+            get { return _searchbutton; }
         }
 
         private string _profile = "https://avatars.githubusercontent.com/u/44700383?v=4";
@@ -79,16 +88,12 @@ namespace C4F.ViewModels
 
         private async Task<Models.FapelloModel> Build(string name)
         {
-            Logger.Record("building model");
-
             Models.FapelloModel model = new Models.FapelloModel()
             {
                 Name = name,
                 Path = $"content/{name[0]}/{name[1]}/{name}",
                 Medias = await Medias(name)
             };
-
-            Logger.Record($"model built");
 
             return (model);
         }
@@ -129,11 +134,14 @@ namespace C4F.ViewModels
         {
             Page = 1000;
             DownloadButton = true;
+            SearchButton = true;
         }
 
         public async void Download(string name)
         {
             DownloadButton = false;
+            SearchButton = false;
+
             Models.FapelloModel model = await Build(name);
             Name = $"{name[0].ToString().ToUpper()}{name.Substring(1)}";
             Stream content = null;
@@ -199,9 +207,26 @@ namespace C4F.ViewModels
             return ($"{number}");
         }
 
+        public async Task<bool> Search(string name)
+        {
+            HttpResponseMessage responseMessage = null;
+            string data = null;
+            bool result = false;
+
+            SearchButton = false;
+            responseMessage = await Client.GetAsync($"{Host}/{name}");
+            if (responseMessage.StatusCode == HttpStatusCode.OK)
+            {
+                data = await responseMessage.Content.ReadAsStringAsync();
+                result = (data.Contains("<title>Fapello</title>") == false);
+            }
+            SearchButton = true;
+
+            return (result);
+        }
+
         private async Task<(string link, string extension)> Validate(Models.FapelloModel model, int i)
         {
-            bool valid = false;
             string url = null;
             HttpResponseMessage responseMessage = null;
 
@@ -216,7 +241,6 @@ namespace C4F.ViewModels
                 responseMessage = await Client.GetAsync(url);
                 if (responseMessage.StatusCode == HttpStatusCode.OK)
                 {
-                    valid = true;
                     return ((url, data.extension));
                 }
             }
